@@ -13,7 +13,17 @@ typedef struct fz_event_s {
   void* data;
 } fz_event;
 
+typedef struct fz_event_listener_s {
+  int id;
+  void (*function)();
+} fz_event_listener;
+
+typedef struct fz_event_dispatcher_s {
+
+} fz_event_dispatcher;
+
 //---- Functions -----
 fz_event* fz_event_create(int, bool, int, void*);
+void fz_event_delete(fz_event*, void (*)(void *));
 
 #endif // !_FZ_EVENT_H
