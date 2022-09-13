@@ -23,7 +23,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 
 set(sources src/Event.cpp)
-set(public_headers src/FireZombie.h)
+set(public_headers src/Types.hpp)
 
 if(ANDROID)
   list(APPEND sources src/android/platform_android.c)
@@ -33,7 +33,9 @@ if(IOS_PLATFORM)
   list(APPEND sources src/ios/platform_ios.m)
 endif()
 
-add_library(libfzombie ${sources})
+
+add_library(libfzombie SHARED ${sources})
+add_library(libfzombieStatic STATIC ${sources})
 
 set_target_properties(libfzombie
   PROPERTIES
@@ -48,6 +50,28 @@ set_target_properties(libfzombie
 
 if(WIN32)
   target_link_libraries(libfzombie ws2_32 user32)
+  target_link_libraries(libfzombieStatic ws2_32 user32)
 else()
   target_link_libraries(libfzombie m pthread)
+  target_link_libraries(libfzombieStatic m pthread)
+endif()
+
+if(WIN32)
+  set_target_properties(libfzombie
+    PROPERTIES
+    OUTPUT_NAME libfzombie
+  )
+  set_target_properties(libfzombieStatic
+    PROPERTIES
+    OUTPUT_NAME libfzombie
+  )
+else()
+  set_target_properties(libfzombie
+    PROPERTIES
+    OUTPUT_NAME fzombie
+  )
+  set_target_properties(libfzombieStatic
+    PROPERTIES
+    OUTPUT_NAME fzombie
+  )
 endif()
